@@ -313,9 +313,6 @@
         \printFirstPageNotes
     }
     \normalcolor \normalfont
-    \setcounter{footnote}{\int_use:N \g_ceur_fnote_int}  
-    \renewcommand\thefootnote{\arabic{footnote}}
-    \gdef\@pdfauthor{\infoauthors}
     % \gdef\@pdfsubject{Complex ~CEUR ~Content}
     
     %% PDF/A
@@ -1932,40 +1929,6 @@
 % Print all footnotes in the title page
 %
 
-\bool_new:N \g_ceur_longmktitle_bool
-\int_new:N \g_ceur_jtype_int
-\int_new:N \g_ceur_blind_int
-
-\NewDocumentCommand \printFirstPageNotes { } {
-    \bool_if:NTF \g_ceur_longmktitle_bool {
-        \tex_let:D \columnwidth = \textwidth
-    } { }
-    \int_compare:nTF { \g_ceur_jtype_int > 5 } {
-        \ceuraddress
-    } { }
-    \printnonumnotes
-    \printtnotes
-    \bool_if:NTF \g_ceur_blind_bool {
-    } {
-        \printcornotes
-        \printfnotes
-        \printmaltese
-        \printaddrinfoot
-        \printemails
-        \printurls
-        \printorcid
-        \printfacebook
-        \printtwitter
-        \printgplus
-        \printlinkedin
-    }
-    \printlogonotes
-    \bool_if:NTF \g_ceur_longmktitle_bool {
-        \if@twocolumn
-        \tex_let:D \columnwidth = \Columnwidth \fi
-    } { }
-    \normalcolor
-}
 
 %
 % Date History
@@ -2139,8 +2102,6 @@
         \end{Abstract}
         \dashrule{3pt}{3pt}
     }
-    \vbox_gset:Nn \g_ceur_notes_box
-    {  \cs_set_eq:NN \footnotetext \__fn_text:n  \printFirstPageNotes }
     \dim_gset:Nn \g_tmpb_dim { \box_ht:N \g_ceur_notes_box }
     % \iow_term:x { ...~[ht: \dim_use:N \g_tmpb_dim  ] }
     \dim_gadd:Nn \g_tmpb_dim { \box_dp:N \g_ceur_notes_box }

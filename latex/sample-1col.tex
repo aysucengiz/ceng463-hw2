@@ -27,13 +27,6 @@
 %% end of the preamble, start of the body of the document source.
 \begin{document}
 
-%%
-%% Rights management information.
-%% CC-BY is default license.
-\copyrightyear{2023}
-\copyrightclause{Copyright for this paper by its authors.
-  Use permitted under Creative Commons License Attribution 4.0
-  International (CC BY 4.0).}
 
 %%
 %% This command is for the conference information
@@ -66,11 +59,7 @@ Homework 2 for CENG463, fall 2024
 
 \section{Approach}
 
-\subsection{Environment}
 The environment I used was free Google Colab with T4 GPU. I had 12.7GB system RAM and 15GB GPU RAM.
-
-
-
 \subsection{Data}
 Turkey was chosen as the country due to its large data size, which gives a more robust result than the other datasets. Moreover, the class distribution was nearly even. For both tasks, the distribution of test dataset was as follows: 51.4\% label 0, 49.6\% label 1. The test dataset was not used as it did not include labels.\\
 
@@ -81,35 +70,27 @@ For splitting the data, these two guides were used which were present in the hom
 \subsection{Masked LM}
 As a masked LM, XLMRoberta was chosen to be able to compare different languages without changing much in the code. Though other languages will not be discussed in this report nor they are present in the finalized code, the topic will be mentioned slightly in the discussion section.
 
-For fine-tuning, again the guide given in the homework pdf was followed: \href{https://huggingface.co/docs/transformers/training}{Fine-tune a pretrained model}. 
-
-The followed steps can be seen below:
+For fine-tuning, again the guide given in the homework pdf was followed: \href{https://huggingface.co/docs/transformers/training}{Fine-tune a pretrained model}. The followed steps can be seen below:
 \begin{itemize}
     \item Tokenize
     \item Turn pandas dataframe into a tensor and then to dataloader
-    \item Determine the device
     \item Fine-tune
     \item Evaluate
 \end{itemize}
 
+
+
 \subsection{Causal LM}
 
-For causal language models, choosing a model was more tricky. The resources at hand resulted in a very limited selection of causal models. Models such as Bloom and Llama crashed while trying to get their classifiers due to the limited RAM at hand. Because of this factor, distilgpt2, which is not primarily a multilanguage model was chosen. Since the model is not inherently trained for Turkish, it may have some disadvantages. 
+For causal language models, choosing a model was more tricky. The resources at hand resulted in a very limited selection of causal models. Models such as Bloom and Llama crashed while trying to get their classifiers due to the limited RAM at hand. Because of this factor, distilgpt2, which is not primarily a multilanguage model was chosen. Since the model is not inherently trained for Turkish, it may have some disadvantages.\\
 
-Moreover, in order to see the difference between fine-tuning and zero-shot clearer, four types of evaluations were made:
-\begin{itemize}
-    \item Original language zero-shot
-    \item Original language fine-tuning
-    \item English zero-shot
-    \item English fine-tuning
-\end{itemize}
+Moreover, in order to see the difference between fine-tuning and zero-shot clearer, four types of evaluations were made: Original language zero-shot, original language fine-tuning, English zero-shot, English fine-tuning.\\
 
 The steps are similar to Masked LM for fine-tuned models. For evaluation pipeline function from transformers was used. Again, \href{https://huggingface.co/docs/transformers/pipeline_tutorial##text-pipeline}{Pipelines for inference} guide given in the pdf was used. As the task name "text-classification" was chosen for the fine-tuned models and "zero-shot-classification" for zero-shot ones.
 
-\section{Process}
+\subsection{Experimental Setup}
 
-
-
+The experimental setup is as follows: Batch size is 32 for Masked, 16 for Causal. Epoch is 3. Learning rate is "5e-5". Optimizer is AdamW. Scheduler is Linear. Temperature is by default 1.0. For causal model, decoding strategy is greedy.
 
 \section{Task 1: Orientation}
 
