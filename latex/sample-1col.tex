@@ -1,0 +1,179 @@
+%% The first command in your LaTeX source must be the \documentclass command.
+%%
+%% Options:
+%% twocolumn : Two column layout.
+%% hf: enable header and footer.
+\documentclass[
+% twocolumn,
+% hf,
+]{ceurart}
+
+%%
+%% One can fix some overfulls
+\sloppy
+
+
+
+\usepackage{hyperref}
+
+%%
+%% Minted listings support 
+%% Need pygment <http://pygments.org/> <http://pypi.python.org/pypi/Pygments>
+\usepackage{listings}
+%% auto break lines
+\lstset{breaklines=true}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% Rights management information.
+%% CC-BY is default license.
+\copyrightyear{2023}
+\copyrightclause{Copyright for this paper by its authors.
+  Use permitted under Creative Commons License Attribution 4.0
+  International (CC BY 4.0).}
+
+%%
+%% This command is for the conference information
+\conference{CENG463 fall 2024: Homework 2}
+
+%%
+%% The "title" command
+\title{CENG463 fall 2024: Homework 2}
+
+\title[mode=sub]{Ayşe Aysu Cengiz 2580371}
+
+
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{abstract}
+Homework 2 for CENG463, fall 2024
+\end{abstract}
+
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+\section{Approach}
+
+\subsection{Environment}
+The environment I used was free Google Colab with T4 GPU. I had 12.7GB system RAM and 15GB GPU RAM.
+
+
+
+\subsection{Data}
+Turkey was chosen as the country due to its large data size, which gives a more robust result than the other datasets. Moreover, the class distribution was nearly even. For both tasks, the distribution of test dataset was as follows: 51.4\% label 0, 49.6\% label 1. The test dataset was not used as it did not include labels.\\
+
+For splitting the data, these two guides were used which were present in the homework pdf: \href{https://scikit-learn.org/1.5/modules/generated/sklearn.model_selection.train_test_split.html}{Guide for sklearn.model\_selection.train\_test\_split}, 
+\href{https://stackoverflow.com/questions/34842405/parameter-stratify-from-method-train-test-split-scikit-learn}{guide for stratify}. Using a pandas dataframe was the easiest for applying splitting function. Applying stratification ensured that the even class distribution for the overall dataset was  preserved both in train and test dataset. The data was splitted as the train being 90\% and test being 10\%
+
+
+\subsection{Masked LM}
+As a masked LM, XLMRoberta was chosen to be able to compare different languages without changing much in the code. Though other languages will not be discussed in this report nor they are present in the finalized code, the topic will be mentioned slightly in the discussion section.
+
+For fine-tuning, again the guide given in the homework pdf was followed: \href{https://huggingface.co/docs/transformers/training}{Fine-tune a pretrained model}. 
+
+The followed steps can be seen below:
+\begin{itemize}
+    \item Tokenize
+    \item Turn pandas dataframe into a tensor and then to dataloader
+    \item Determine the device
+    \item Fine-tune
+    \item Evaluate
+\end{itemize}
+
+\subsection{Causal LM}
+
+For causal language models, choosing a model was more tricky. The resources at hand resulted in a very limited selection of causal models. Models such as Bloom and Llama crashed while trying to get their classifiers due to the limited RAM at hand. Because of this factor, distilgpt2, which is not primarily a multilanguage model was chosen. Since the model is not inherently trained for Turkish, it may have some disadvantages. 
+
+Moreover, in order to see the difference between fine-tuning and zero-shot clearer, four types of evaluations were made:
+\begin{itemize}
+    \item Original language zero-shot
+    \item Original language fine-tuning
+    \item English zero-shot
+    \item English fine-tuning
+\end{itemize}
+
+The steps are similar to Masked LM for fine-tuned models. For evaluation pipeline function from transformers was used. Again, \href{https://huggingface.co/docs/transformers/pipeline_tutorial##text-pipeline}{Pipelines for inference} guide given in the pdf was used. As the task name "text-classification" was chosen for the fine-tuned models and "zero-shot-classification" for zero-shot ones.
+
+\section{Process}
+
+
+
+
+\section{Task 1: Orientation}
+
+In the orientation task Turkish orientation dataset was used. While fine-tuning the masked LM, the preffered label was "text", meaning the fine-tuning was made with the text in the original language, Turkish.
+
+\subsection{Results}
+\begin{enumerate}
+    \item Masked LM
+    \begin{itemize}
+        \item Original Language - fine-tuned: 86.55 \%
+    \end{itemize}
+    \item Causal LM
+    \begin{itemize}
+        \item Original Language - zero-shot: 58.05\%
+        \item Original Language - fine-tuned: 66.48\%
+        \item English - zero-shot: 46.03\%
+        \item English - fine-tuned: 79.74\%
+    \end{itemize}
+\end{enumerate}
+
+
+\section{Task 2: Power}
+
+
+In the power task, again, Turkish orientation dataset was used. While fine-tuning the masked LM, the preffered label was "text\_en", meaning the fine-tuning was made with the text in English.
+
+Masked LM
+Original Language - fine-tuned: 88.72 %
+Causal LM
+Original Language - zero-shot: 54.05%
+Original Language - fine-tuned: 68.14%
+English - zero-shot: 51.01%
+English - fine-tuned: 80.33%
+
+\subsection{Results}
+\begin{enumerate}
+    \item Masked LM
+    \begin{itemize}
+        \item English - fine-tuned: 88.72\%
+    \end{itemize}
+    \item Causal LM
+    \begin{itemize}
+        \item Original Language - zero-shot: 54.05\%
+        \item Original Language - fine-tuned:  68.14\%
+        \item English - zero-shot: 51.01\%
+        \item English - fine-tuned: 80.33\%
+    \end{itemize}
+\end{enumerate}
+
+
+\section{GitHub Repository}
+You can reach the repository via \href{https://github.com/aysucengiz/ceng463-hw2.git}{aysucengiz/ceng463-hw2}. Resulting files are in main branch while task1 branch includes some trials I did with other languages and other approaches. Llama branch has the attempt of importing Llama-2-7B-hf model, which resulted in a crash due to the limited RAM.
+
+
+\section{Discussion}
+
+The results mostly align for both of the tasks. Below are the comparisons for various results.
+
+\begin{enumerate}
+    \item \textbf{Masked (English and Turkish):} For both languages, the result is quite close, with English being slightly higher. This slight difference might be due to the dataset difference or English being a higher resource language than Turkish. 
+    \item \textbf{Causal (Zero-Shot and Fine-Tuned):} As expected, when the causal model is fine-tuned its results go from random to robust. While the zero-shot results differed greatly every time the same model was evaluated, such variation was not present in the fine-tuned models.
+    \item \textbf{Causal (English and Turkish):} For both tasks, English fine-tuned model performs better than the Original Language fine-tuned model. Since gpt2 is mainly an English model, unlike XLMRoberta, the difference between the accuracies when the models are fine-tuned is as expected and the modal is unable to reach high accuracies in the Turkish dataset. An inherently multilingual causal model would be more accurate in labeling Turkish data. However, for zero-shot models such a pattern cannot be observed as zero-shot models label the data in a rather randomized fashion.
+    \item \textbf{Masked and Causal:} In the Turkish dataset, it is clear that the masked model performs better than the causal model even when the causal model is fine-tuned. However, for smaller datasets such as Spanish, masked model sometimes performed very low, dropping down to 55\% accuracy. Which shows the importance of the data size.
+\end{enumerate}
+
+As a result, it can be said that the masked multilingual model performs very good when fine-tuned, independent from the language and the zero-shot evaluation results in about a 50\% accuracy which is as good as guessing.
+\end{document}
